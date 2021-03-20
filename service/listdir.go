@@ -7,6 +7,7 @@ import (
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/zjyl1994/webls/config"
 )
 
 const (
@@ -27,16 +28,19 @@ type FileItem struct {
 	Size    string
 }
 
-func ListDir(path string) ([]FileItem, error) {
+func ListDir(path string) (result []FileItem, hasREADME bool, err error) {
 	infos, err := ioutil.ReadDir(path)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	fileInfos := make([]fileInfo, 0, len(infos))
 	for _, v := range infos {
 		name := v.Name()
-		if !strings.HasPrefix(name, ".") { //hide file by start .
+		if name == config.ReadmeFilename {
+			hasREADME = true
+		}
+		if !strings.HasPrefix(name, ".") {
 			fileInfos = append(fileInfos, fileInfo{
 				Name:    name,
 				IsDir:   v.IsDir(),
@@ -54,7 +58,7 @@ func ListDir(path string) ([]FileItem, error) {
 		}
 	})
 
-	result := make([]FileItem, len(fileInfos))
+	result = make([]FileItem, len(fileInfos))
 	for i, v := range fileInfos {
 		result[i] = FileItem{
 			Name:    v.Name,
@@ -64,5 +68,5 @@ func ListDir(path string) ([]FileItem, error) {
 		}
 	}
 
-	return result, nil
+	return result, hasREADME, nil
 }

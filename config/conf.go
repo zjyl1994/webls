@@ -1,6 +1,13 @@
 package config
 
 var (
-	DataDir   = "./data"
-	DebugMode = true
+	DataDir  = "./data"
+	SiteName = "Webls"
+	Author   = "author"
+	Since    = 0
+)
+
+const (
+	DebugMode      = true
+	ReadmeFilename = "README.md"
 )

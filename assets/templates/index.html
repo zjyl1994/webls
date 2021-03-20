@@ -4,58 +4,73 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documents</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" 
-    crossorigin="anonymous">
+    <title>Index {{.path}} - {{.sitename}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+    <style>
+        html,body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">Web-ls</a>
-        </div>
-    </nav>
+    <div style="height: 1em;"></div>
     <div class="container">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Size</th>
-                    <th scope="col">LastMod</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{- $path := .path}}
-                {{- if .uppath }}
-                <tr>
-                    <td>
-                        <i class="bi bi-arrow-90deg-up"></i>
-                        <a href="{{ .uppath }}"> .. </a>
-                    </td>
-                    <td> - </td>
-                    <td> - </td>
-                </tr>
-                {{- end}}
-                {{- range .infos}}
-                <tr>
-                    <td>
-                        {{- if .IsDir}}
-                        <i class="bi bi-folder-fill"></i>
-                        {{- else}}
-                        <i class="bi bi-file-earmark"></i>
-                        {{- end}}
-                        <a href="{{ $path }}/{{.Name}}">{{.Name}}</a>
-                    </td>
-                    <td>{{.Size}}</td>
-                    <td>{{.LastMod}}</td>
-                </tr>
-                {{- end}}
-            </tbody>
-        </table>
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                {{.sitename}}
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Last Modified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{- $path := .urlpath}}
+                    {{- if .uppath }}
+                    <tr>
+                        <td>
+                            <i class="bi bi-arrow-90deg-up"></i>
+                            <a href="{{ .uppath }}"> .. </a>
+                        </td>
+                        <td> - </td>
+                        <td> - </td>
+                    </tr>
+                    {{- end}}
+                    {{- range .infos}}
+                    <tr>
+                        <td>
+                            {{- if .IsDir}}
+                            <i class="bi bi-folder-fill"></i>
+                            {{- else}}
+                            <i class="bi bi-file-earmark"></i>
+                            {{- end}}
+                            <a href="{{ $path }}/{{.Name}}">{{.Name}}</a>
+                        </td>
+                        <td>{{.Size}}</td>
+                        <td>{{.LastMod}}</td>
+                    </tr>
+                    {{- end}}
+                </tbody>
+            </table>
+            {{- if .markdown}}
+            <div class="panel-body">
+                <div class="markdown-body">
+                {{- htmlSafe .markdown}}
+                </div>
+            </div>
+            {{- end}}
+            <div class="panel-footer text-center">
+                &copy; Copyright {{.since}} {{.author}}.
+                Powered By <a href="https://github.com/zjyl1994/webls">Webls</a>.
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" 
-    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>

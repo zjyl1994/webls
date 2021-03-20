@@ -15,6 +15,11 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	router := gin.Default()
+	router.SetFuncMap(template.FuncMap{
+		"htmlSafe": func(html string) template.HTML {
+			return template.HTML(html)
+		},
+	})
 	if gin.IsDebugging() {
 		router.LoadHTMLGlob("assets/templates/*.html")
 	} else {

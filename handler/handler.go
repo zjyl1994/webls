@@ -1,31 +1,45 @@
 package handler
 
 import (
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	blackfriday "github.com/russross/blackfriday/v2"
 	"github.com/zjyl1994/webls/config"
 	"github.com/zjyl1994/webls/service"
+	"github.com/zjyl1994/webls/util"
 )
 
 func listDirHandler(currentPath, realDiskPath string, c *gin.Context) {
-	infos, err := service.ListDir(realDiskPath)
+	infos, hasREADME, err := service.ListDir(realDiskPath)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	var upperPath string
+	var readmeContent string
+	if hasREADME {
+		mdfile, err := ioutil.ReadFile(filepath.Join(realDiskPath, config.ReadmeFilename))
+		if err == nil {
+			readmeContent = string(blackfriday.Run(mdfile))
+		}
+	}
+	var upperPath, urlPath string
 	if currentPath != "/" {
 		upperPath = filepath.Dir(currentPath)
-	} else {
-		currentPath = ""
+		urlPath = currentPath
 	}
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"infos":  infos,
-		"path":   currentPath,
-		"uppath": upperPath,
+		"infos":    infos,
+		"path":     currentPath,
+		"urlpath":  urlPath,
+		"uppath":   upperPath,
+		"sitename": config.SiteName,
+		"markdown": readmeContent,
+		"since":    util.CopyrightYear(config.Since),
+		"author":   config.Author,
 	})
 }
 
@@ -38,7 +52,7 @@ func PortalHandler(c *gin.Context) {
 			c.File(realpath)
 		}
 	} else if os.IsNotExist(err) {
-		_ = c.AbortWithError(http.StatusNotFound, err)
+		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		_ = c.AbortWithError(http.StatusInternalServerError, err)
 	}
