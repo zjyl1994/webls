@@ -14,6 +14,7 @@ func main() {
 	if !config.DebugMode {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	config.LoadArgs()
 	router := gin.Default()
 	router.SetFuncMap(template.FuncMap{
 		"htmlSafe": func(html string) template.HTML {
@@ -26,7 +27,7 @@ func main() {
 		router.SetHTMLTemplate(template.Must(template.New("").ParseFS(assets.TemplateAssets, "templates/*.html")))
 	}
 	router.GET("/*path", handler.PortalHandler)
-	err = router.Run()
+	err = router.Run(config.Listen)
 	if err != nil {
 		panic(err)
 	}

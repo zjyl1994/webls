@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	prettytime "github.com/andanhm/go-prettytime"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/zjyl1994/webls/config"
 )
@@ -26,6 +27,7 @@ type FileItem struct {
 	IsDir   bool
 	LastMod string
 	Size    string
+	TimeAgo string
 }
 
 func ListDir(path string) (result []FileItem, hasREADME bool, err error) {
@@ -65,6 +67,7 @@ func ListDir(path string) (result []FileItem, hasREADME bool, err error) {
 			IsDir:   v.IsDir,
 			LastMod: v.LastMod.Format(timeFormat),
 			Size:    humanize.Bytes(uint64(v.Size)),
+			TimeAgo: prettytime.Format(v.LastMod),
 		}
 	}
 
