@@ -11,16 +11,16 @@
     <style>
         html,body{
             font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
+            padding: 1em 1em;
         }
     </style>
 </head>
 <body>
-    <div style="height: 1em;"></div>
     <div class="container">
-        <div class="panel panel-primary">
+        <div class="panel panel-info">
             <div class="panel-heading">
-                <i class="bi bi-hdd-fill"></i>
-                {{.sitename}}
+                <i class="bi bi-server"></i>
+                &nbsp;{{.sitename}}
             </div>
             <table class="table table-hover">
                 <thead>
@@ -28,7 +28,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Size</th>
                         <th scope="col">Last Modified</th>
-                        <th scope="col"></th>
+                        <th scope="col">Update At</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,7 +41,7 @@
                         </td>
                         <td> - </td>
                         <td> - </td>
-                        <td></td>
+                        <td> - </td>
                     </tr>
                     {{- end}}
                     {{- range .infos}}
@@ -69,7 +69,7 @@
             </div>
             {{- end}}
             <div class="panel-footer">
-                &copy; Copyright {{.since}} {{.author}}.
+                &copy; Copyright {{.since}} {{.author}}.&nbsp;
                 Powered By <a href="https://github.com/zjyl1994/webls">Webls</a>.
             </div>
         </div>

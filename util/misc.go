@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-func CopyrightYear(since int) string {
-	nowYear := time.Now().Year()
-	if since == 0 || nowYear == since {
-		return strconv.Itoa(nowYear)
+func CopyrightYear(since string) string {
+	nowYear := strconv.Itoa(time.Now().Year())
+	if since == "" || nowYear == since {
+		return nowYear
 	} else {
-		return fmt.Sprintf("%d - %d", since, nowYear)
+		return fmt.Sprintf("%s - %s", since, nowYear)
 	}
 }

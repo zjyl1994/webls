@@ -1,13 +1,8 @@
 package config
 
-import "flag"
-
-var (
-	DataDir  = "."
-	SiteName = "Webls"
-	Author   = "Webls"
-	Listen   = ":9496"
-	Since    = 0
+import (
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -15,11 +10,28 @@ const (
 	ReadmeFilename = "README.md"
 )
 
-func LoadArgs() {
-	flag.StringVar(&Listen, "listen", ":9496", "listen address")
-	flag.StringVar(&DataDir, "path", ".", "path to list")
-	flag.StringVar(&SiteName, "sitename", "Webls", "name display in web panel")
-	flag.StringVar(&Author, "author", "Webls", "copyright author display in web panel")
-	flag.IntVar(&Since, "since", 0, "since year display in web panel")
-	flag.Parse()
+type flagValue struct {
+	Data    string
+	Message string
+}
+
+func init() {
+	viper.SetEnvPrefix("webls")
+	defaultValue := map[string]flagValue{
+		"listen":   {":9496", "listen address"},
+		"path":     {".", "path to list"},
+		"sitename": {"Webls", "name display in web panel"},
+		"author":   {"Webls", "copyright author display in web panel"},
+		"since":    {"", "since year display in web panel"},
+	}
+	for k, v := range defaultValue {
+		viper.SetDefault(k, v.Data)
+		pflag.String(k, v.Data, v.Message)
+	}
+	pflag.Parse()
+	err := viper.BindPFlags(pflag.CommandLine)
+	if err != nil {
+		panic(err)
+	}
+	viper.AutomaticEnv()
 }

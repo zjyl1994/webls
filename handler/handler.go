@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	blackfriday "github.com/russross/blackfriday/v2"
+	"github.com/spf13/viper"
 	"github.com/zjyl1994/webls/config"
 	"github.com/zjyl1994/webls/service"
 	"github.com/zjyl1994/webls/util"
@@ -36,15 +37,15 @@ func listDirHandler(currentPath, realDiskPath string, c *gin.Context) {
 		"path":     currentPath,
 		"urlpath":  urlPath,
 		"uppath":   upperPath,
-		"sitename": config.SiteName,
+		"sitename": viper.GetString("sitename"),
 		"markdown": readmeContent,
-		"since":    util.CopyrightYear(config.Since),
-		"author":   config.Author,
+		"since":    util.CopyrightYear(viper.GetString("since")),
+		"author":   viper.GetString("author"),
 	})
 }
 
 func PortalHandler(c *gin.Context) {
-	realpath := filepath.Join(config.DataDir, c.Param("path"))
+	realpath := filepath.Join(viper.GetString("path"), c.Param("path"))
 	if stat, err := os.Stat(realpath); err == nil {
 		if stat.IsDir() {
 			listDirHandler(c.Param("path"), realpath, c)
